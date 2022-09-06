@@ -1,20 +1,25 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { useState } from 'react';
+import RoutesApp from './src/routes';
+import Provider from './src/provider';
+import CurrentDate from './src/store';
 
 export default function App() {
+  const [isDate, setIsDate] = useState(CurrentDate);
+  const increaseMonth = () => setIsDate(() => {
+    if (isDate.month === 12) {
+      return setIsDate({ month: 1, year: isDate.year + 1 })
+    }
+    return setIsDate({ month: isDate.month + 1, year: isDate.year })
+  })
+  const decreaseMonth = () => setIsDate(() => {
+    if (isDate.month === 1) {
+      return setIsDate({ month: 12, year: isDate.year - 1 })
+    }
+    return setIsDate({ month: isDate.month - 1, year: isDate.year })
+  })
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <Provider value={{isDate, increaseMonth, decreaseMonth}}>
+      <RoutesApp />
+    </Provider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
